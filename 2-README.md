@@ -29,8 +29,17 @@ services:
 
 ````
 use actix_web::{get, App, HttpServer, Responder};
+// Importa SQLx para trabalhar com banco de dados 
+// "PgPoolOptions" -> configuração do pool de conexões
+// "Pool" -> o pool de conexão
+// "Postgres" -> tipo de representação do banco postgres
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
+
+// Importa o dotenv, que lê variáveis de um arquivo .env
 use dotenv::dotenv;
+
+// Importa o módulo `env` da biblioteca padrão do Rust
+// Usado para ler variáveis de ambiente do sistema
 use std::env;
 
 #[get("/hello")]
@@ -39,18 +48,32 @@ async fn hello() -> impl Responder {
 }
 
 #[actix_web::main]
+// std::io::Result<()> -> agora a main retorna um Result
+// Significa que a função pode retornar um erro de I/O (ex: porta ocupada)
 async fn main() -> std::io::Result<()> {
+
+    // Carrega as variáveis do arquivo ".env" para o ambiente
+    // "ok()" ignora silenciosamente se o arquivo não existir
     dotenv().ok();
+
+    // Lê a variável de ambiente "DATABASE_URL"
+    // ".expect()" trava o programa com uma mensagem se a variável não existir
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
+    // Crio o pool de conexão com o banco de dados 
     let pool = PgPoolOptions::new()
-        .max_connections(5)
-        .connect(&database_url)
-        .await
-        .expect("Failed to create pool.");
+        .max_connections(5) // Limite de 5 conexões simultâneas com o banco
+        .connect(&database_url) // Conecta usando a URL ".env"
+        .await // Aguarda a conexão ser estabelecida
+        .expect("Failed to create pool."); // Trava se não conseguir conectar
 
+    // "move" —> transfere a posse do `pool` para dentro da closure
+    // Necessário pois cada thread precisa ter sua própria cópia do pool
     HttpServer::new(move || {
         App::new()
+            // Compartilhar o pool com todas as rotas da aplicação
+            // "Data::new() -> empacota o pool com todas as rotas da aplicação"
+            // "clone()" -> cria uma copia do pool para cada thread
             .app_data(actix_web::web::Data::new(pool.clone()))
             .service(hello)
     })
@@ -58,4 +81,16 @@ async fn main() -> std::io::Result<()> {
     .run()
     .await
 }
+````
+
+## Os principais conceitos legandados foram:
+
+````
+dotenv → lê um arquivo .env com configurações sensíveis (ex: senha do banco)
+env::var → lê variáveis de ambiente
+Result<()> → o main agora pode retornar erro
+PgPoolOptions / Pool → gerencia múltiplas conexões com o banco de dados
+move → transfere posse de variáveis para dentro da closure
+app_data → compartilha dados (como o pool) entre todas as rotas
+.clone() → cria uma cópia do pool para cada thread
 ````
