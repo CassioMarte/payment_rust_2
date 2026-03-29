@@ -1,3 +1,33 @@
+## Docker compose e conexão com banco
+
+## docker-compose.yml
+````
+version: 3.8
+
+services:
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_DB: payment_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+````
+
+## cargo.toml
+
+ - add:
+````
+  tokio = { version = "1", features = ["full"] }
+  sqlx = { version = "0.7", features = ["runtime-tokio", "postgres", "uuid", "chrono"] }
+  dotenv = "0.15"
+````
+
+## main.rs e conexão com banco
+
+````
 use actix_web::{get, App, HttpServer, Responder};
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 use dotenv::dotenv;
@@ -28,3 +58,4 @@ async fn main() -> std::io::Result<()> {
     .run()
     .await
 }
+````
