@@ -8,6 +8,12 @@ RUN cargo build --release
 FROM debian:bookworm-slim
 WORKDIR /app
 
+# instala libs de runtime comuns (ajuste conforme seu projeto)
+RUN apt-get update && apt-get install -y \
+    libssl3 \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
 # copia só o binário final
 COPY --from=builder /app/target/release/payment_rust_2 .
 
