@@ -1,4 +1,4 @@
-# Model, validators e default
+# Model
 
 ## Model
 
@@ -106,9 +106,39 @@ pub updated_at: NaiveDateTime,  // quando foi atualizado por último
 ## Resumo Visual
 
 ```
+
 #[derive(
-    Debug,        → 
-    Serialize,    →
-    Deserialize,  →
-    FromRow,      →
+    Debug,        → consigo imprimir no terminal
+    Serialize,    → consigo converter Rust → JSON
+    Deserialize,  → consigo converter JSON → Rust
+    FromRow,      → consigo converter linha do banco → Rust 
 )]
+pub struct Payment{
+    pub uuid: Uuid,
+    pub created_at: NaiveDateTime, 
+    pub updated_at: NaiveDateTime, 
+}
+
+```
+
+# Default 
+- crio uma implementação para um model com valores default caso o front não envie nada 
+
+```
+use crate::model::{NewPayment, PaymentStatus, PaymentMethod};
+
+
+impl Default for NewPayment {
+  fn default()-> Self {
+    NewPayment{
+      amount: 0.0,
+      currency: String::from("BRL"),
+      payment_method: PaymentMethod::Money,
+      payment_reason: String::from(""),
+      status: PaymentStatus::Pending,
+    }
+  }
+}
+
+let new_payment = NewPayment::default();
+```

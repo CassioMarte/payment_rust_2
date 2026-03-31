@@ -30,6 +30,7 @@ pub struct Payment {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(default)]
 pub struct NewPayment {
     pub amount: f64,
     pub currency: String,
