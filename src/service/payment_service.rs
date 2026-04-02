@@ -4,7 +4,7 @@ use validator::Validate;
 
 use crate::repositories::payment_repository;
 use crate::models::payment::{NewPayment, Payment, UpdatePayment, UpdatePaymentStatus};
-use crate::validators::payment_validator::{NewPayment, UpdatePayment, UpdatePaymentStatus};
+
 
 
 pub async fn create_new_payment_service(
