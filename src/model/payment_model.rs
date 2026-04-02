@@ -41,14 +41,17 @@ pub struct NewPayment {
 
 
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(default)]
 pub struct UpdatePayment {
     pub payment_method: PaymentMethod,
+    pub currency: String,
     pub status: PaymentStatus,
 }
 
 
 
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(default)]    
 pub struct UpdatePaymentStatus {
     pub status: PaymentStatus,
 }

@@ -2,7 +2,7 @@ use sqlx::{PgPool, Postgres, query_as}
 use uuid::Uuid;
 use chrono::Utc;
 
-use crate::models::payment::{Payment, NewPayment, PaymentMethod, PaymentStatus};
+use crate::models::payment::{Payment, NewPayment, PaymentMethod, PaymentStatus, UpdatePayment, UpdatePaymentStatus};
 
 pub async fn create_payment(pool: &PgPool, new_payment: NewPayment)-> Result<Payment, sqlx::Error>{
   let payment = query_as::<Postgres, Payment>(
@@ -43,11 +43,27 @@ pub get_payment_by_uuid(pool:&Pool, uuid: Uuid)-> Return<Option<Payment>, sqlx::
   Ok(payment)
 }
 
-pub async fn update_payment_status(pool: &PgPool, uuid: Uuid, new_status: PaymentStatus) -> Result<Payment, sqlx::Error> {
+pub async fn update_payment(pool: &PgPool, uuid:Uuid, update_data: UpdatePayment)-> Result<Payment, sqlx::Error>{
+  let payment = query_as::<Postgres, Payment>(
+    "UPDATE payments SET payment_method = $1, currency = $2, status = $3, updated_at = $4 WHERE uuid = $5 RETURNING *"
+  )
+  .bind(update_data.payment_method as PaymentMethod)
+  .bind(update_data.currency)
+  .bind(update_data.status as PaymentStatus)
+  .bind(Utc::now().naive_utc())
+  .bind(uuid)
+  .fetch_one(pool)
+  .await?;
+
+  Ok(payment)
+}
+
+
+pub async fn update_payment_status(pool: &PgPool, uuid: Uuid, new_status: UpdatePaymentStatus) -> Result<Payment, sqlx::Error> {
   let payment = query_as::<Postgres, Payment>(
     "UPDATE payments SET status = $1, updated_at = $2 WHERE uuid = $3 RETURNING *"
   )
-  .bind(new_status as PaymentStatus)
+  .bind(new_status.status as PaymentStatus)
   .bind(Utc::now().naive_utc())
   .bind(uuid)
   .fetch_one(pool)

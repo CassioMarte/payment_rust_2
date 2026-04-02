@@ -9,6 +9,10 @@ impl Validate for UpdatePayment{
       errors.add("payment_method", ValidationError::new("Invalid payment method"));
     }
 
+    if self.cuurrency.is_some() && self.currency.as_ref().unwrap().trim().is_empty() {
+      errors.add("currency", ValidationError::new("Currency cannot be empty"));
+    }
+
     if errors.is_empty() {
       Ok(())
     } else {

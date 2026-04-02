@@ -20,6 +20,7 @@ impl Default for UpdatePayment{
   fn default()-> Self {
     UpdatePayment{
       payment_method: PaymentMethod::Money,
+      currency: String::from("BRL"),
       status: PaymentStatus::Completed,
     }
   }
