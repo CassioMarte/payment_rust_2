@@ -21,7 +21,7 @@ impl Validate for NewPayment {
       errors.add("payment_reason", ValidationError::new("Payment reason cannot be empty"));
     }
 
-    if self.status != PaymentStatus::Pending && self.status != PaymentStatus::Completed && self.status != PaymentStatus::Failed {
+    if self.status != PaymentStatus::Pending && self.status != PaymentStatus::Completed && self.status != PaymentStatus::Canceled {
       errors.add("status", ValidationError::new("Invalid payment status"));
     }
 

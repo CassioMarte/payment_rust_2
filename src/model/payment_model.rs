@@ -6,7 +6,7 @@ use chrono::{NaiveDateTime, Utc};
 enum PaymentStatus {
     Pending,
     Completed,
-    Failed,
+    Canceled,
 }
 
 enum PaymentMethod {
@@ -43,5 +43,12 @@ pub struct NewPayment {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct UpdatePayment {
     pub payment_method: PaymentMethod,
+    pub status: PaymentStatus,
+}
+
+
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct UpdatePaymentStatus {
     pub status: PaymentStatus,
 }

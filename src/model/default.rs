@@ -1,4 +1,4 @@
-use crate::model::{NewPayment, PaymentStatus, PaymentMethod};
+use crate::model::{NewPayment, PaymentStatus, PaymentMethod, UpdatePayment, UpdatePaymentStatus};
 
 
 impl Default for NewPayment {
@@ -14,3 +14,23 @@ impl Default for NewPayment {
 }
 
 let new_payment = NewPayment::default();
+
+
+impl Default for UpdatePayment{
+  fn default()-> Self {
+    UpdatePayment{
+      payment_method: PaymentMethod::Money,
+      status: PaymentStatus::Completed,
+    }
+  }
+}
+
+let update_payment = UpdatePayment::default();
+
+impl Default for UpdatePaymentStatus{
+  fn default()-> Self {
+    UpdatePaymentStatus{
+      status: PaymentStatus::Canceled,
+    }
+  }
+}

@@ -57,14 +57,14 @@ pub async fn update_payment_status(pool: &PgPool, uuid: Uuid, new_status: Paymen
 }
 
 
-pub async fn update_payment_for_refund(pool: &PgPool, id: Uuid, new_amount: f64, status: String) -> Result<Option<Payment>, sqlx::Error> {
+pub async fn update_payment_for_refund(pool: &PgPool, uuid: Uuid, new_amount: f64, status: String) -> Result<Option<Payment>, sqlx::Error> {
     let payment = query_as::<Postgres, Payment>(
-        "UPDATE payments SET amount = $1, status = $2, updated_at = $3 WHERE id = $4 RETURNING *"
+        "UPDATE payments SET amount = $1, status = $2, updated_at = $3 WHERE uuid = $4 RETURNING *"
     )
     .bind(new_amount)
     .bind(status)
     .bind(Utc::now().naive_utc())
-    .bind(id)
+    .bind(uuid)
     .fetch_optional(pool)
     .await?;
 
