@@ -40,7 +40,11 @@ pub async fn update_payment_service(pool: &PgPool, uuid: Uuid, update_data: Upda
     Ok(payment)
 }
 
-pub async fn update_payment_status_service(pool: &PgPool, uuid: Uuid, update_data: UpdatePaymentStatus) -> Result<Option<Payment>, Box<dyn std::error::Error>> {
+pub async fn update_payment_status_service(
+  pool: &PgPool,
+  uuid: Uuid, 
+  update_data: UpdatePaymentStatus
+) -> Result<Option<Payment>, Box<dyn std::error::Error>> {
     update_data.validate()?;
     let payment = payment_repository::update_payment_status(pool, uuid, update_data).await?;
     Ok(payment)
