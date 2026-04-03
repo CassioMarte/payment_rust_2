@@ -4,7 +4,15 @@ use crate::handlers::payment_handlers;
 pub fn config(cfg: &mut web::ServiceConfig){
     cfg.service(
       web::resource("/payment")
-      .route(web::post().to(payment_handlers::create_payment))
+      .route(web::post().to(payment_handlers::create_payment_handler))
+      .route(web::get().to(payment_handlers::get_all_payments_handler))
+      .service(
+        web::resource("/{uuid}")
+        .route(web::get().to(payment_handlers::get_payment_by_uuid_handler))
+        .route(web::put().to(payment_handlers::update_payment_handler))
+        .route(web::patch().to(payment_handlers::update_payment_status_handler))
+        .route(web::patch().to(payment_handlers::refund_payment_handler))
+      ) 
     )
 }
 
