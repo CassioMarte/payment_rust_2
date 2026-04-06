@@ -33,8 +33,8 @@ pub struct Payment {
 #[serde(default)]
 pub struct NewPayment {
     pub amount: f64,
-    pub currency: String,
-    pub payment_method: PaymentMethod,
+    pub currency: Option<String>,
+    pub payment_method: Option<PaymentMethod>,
     pub payment_reason: String,
     pub status: PaymentStatus,
 }

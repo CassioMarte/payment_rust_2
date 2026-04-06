@@ -9,11 +9,11 @@ impl Validate for NewPayment {
       errors.add("amount", ValidationError::new("Amount must be greater than zero"));
     }
 
-    if self.currency.trim().is_empty(){
+    if self.status == PaymentStatus::Completed && self.currency.as_ref().map_or(true, |c| c.trim().is_empty()){
       errors.add("currency", ValidationError::new("Currency cannot be empty"));
     }
 
-    if self.payment_method != PaymentMethod::CreditCard && self.payment_method != PaymentMethod::DebitCard && self.payment_method != PaymentMethod::Money && self.payment_method != PaymentMethod::Pix {
+    if self.status == PaymentStatus::Completed && (self.payment_method.is_none() || (self.payment_method != Some(PaymentMethod::CreditCard) && self.payment_method != Some(PaymentMethod::DebitCard) && self.payment_method != Some(PaymentMethod::Money) && self.payment_method != Some(PaymentMethod::Pix))) {
       errors.add("payment_method", ValidationError::new("Invalid payment method"));
     }
 
