@@ -84,9 +84,9 @@ async fn test_get_payment_by_uuid() {
   let fetched_payment = payment_service::get_payment_by_uuid_service(&pool, payment.uuid).await.unwrap();
 
 
-  assert!(fetched_payment.is_some());
-  assert_eq!(fetched_payment.unwrap().uuid, payment.uuid);
-  assert_eq!(fetched_payment.unwrap().amount, payment.amount);
+ let fetched = fetched_payment.unwrap();
+ assert_eq!(fetched.uuid, payment.uuid);
+ assert_eq!(fetched.amount, payment.amount);
 }
 
 
