@@ -60,7 +60,7 @@ pub async fn refund_payment_service(pool: &PgPool, uuid: Uuid, amount_to_refund:
         }
         payment.amount -= amount_to_refund;
         payment.status = if payment.amount == 0.0 { "refunded".to_string() } else { "partially_refunded".to_string() };
-        let updated_payment = payment_repository::update_payment_for_refund(pool, id, payment.amount, payment.status).await?;
+        let updated_payment = payment_repository::update_payment_for_refund(pool, uuid, payment.amount, payment.status).await?;
         Ok(updated_payment)
     } else {
         Ok(None)

@@ -3,13 +3,15 @@ use sqlx::FromRow;
 use uuid::Uuid;
 use chrono::{NaiveDateTime, Utc};
 
-enum PaymentStatus {
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum PaymentStatus {
     Pending,
     Completed,
     Canceled,
 }
 
-enum PaymentMethod {
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum PaymentMethod {
     CreditCard,
     DebitCard,
     Money,
@@ -29,7 +31,7 @@ pub struct Payment {
  pub updated_at: NaiveDateTime,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(default)]
 pub struct NewPayment {
     pub amount: f64,
